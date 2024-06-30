@@ -79,6 +79,9 @@ function expenseAdd (newExpense) {
 
         expenseList.append(expenseItem)
 
+        form.reset()
+        expense.focus()
+
     } catch (error) {
         console.log(error)
         alert("Erro ao criar despesa, tente novamente mais tarde")
@@ -109,6 +112,6 @@ expenseList.addEventListener("click", function(e) {
 
         e.target.closest(".expense").remove()
         updateTotals()
-        
+
     }
 })
