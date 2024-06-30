@@ -3,8 +3,12 @@ const expense = document.getElementById("expense")
 const category = document.getElementById("category")
 const form = document.querySelector("form")
 const expenseList = document.querySelector("ul")
-
+const expenseCounter = document.querySelector("aside header p span")
+const expenseTotalAmount = document.querySelector("aside header h2")
 const onlyNumbersRegex = /\D+/g
+
+
+updateTotals()
 
 amount.oninput = () => {
     let value = amount.value.replace(onlyNumbersRegex, "")
@@ -25,8 +29,8 @@ form.onsubmit = (e) => {
     }
 
     expenseAdd(newExpense)
+    updateTotals()
 }
-
 
 function formatCurrencyBRL(value) {
     
@@ -42,6 +46,7 @@ function expenseAdd (newExpense) {
     try {
         const expenseItem = document.createElement("li")
         expenseItem.classList.add("expense")
+        expenseItem.setAttribute("id",newExpense.id)
         
         const expenseCategoryIcon = document.createElement("img")
         expenseCategoryIcon.setAttribute("src",`./img/${newExpense.caregoryId}.svg`)
@@ -56,17 +61,12 @@ function expenseAdd (newExpense) {
         const expenseCategory = document.createElement("span")
         expenseCategory.textContent = newExpense.categoryName
 
-        expenseInfo.append(expenseDescription)
-        expenseInfo.append(expenseCategory)
+        expenseInfo.append(expenseDescription,expenseCategory)
 
-        const expenseAmount = document.createElement("span")
-        const expenseAmountSign = document.createElement("small")
-        expenseAmount.classList.add("expense-amount")
-        expenseAmount.append(expenseAmountSign)
-        expenseAmountSign.textContent = "R$"
-        expenseAmount.textContent = newExpense.amount
-
-        // <img src="./img/remove.svg" alt="remover" class="remove-icon" />
+        const expenseAmount = document.createElement("span")        
+        expenseAmount.classList.add("expense-amount")        
+        expenseAmount.innerHTML = `<small>R$</small>${newExpense.amount}`
+        
         const expenseDeleteIcon = document.createElement("img")
         expenseDeleteIcon.setAttribute("src", "./img/remove.svg")
         expenseDeleteIcon.setAttribute("alt","remover")
@@ -84,4 +84,26 @@ function expenseAdd (newExpense) {
         alert("Erro ao criar despesa, tente novamente mais tarde")
         
     }
+}
+
+function updateTotals(){
+    const items = expenseList.children
+    const count = expenseList.children.length
+    let totalAmount = 0
+    
+    expenseCounter.textContent = `${count} ${count > 1 ? 'despesas' : 'despesa'}`
+     
+    for (let item = 0 ; item < items.length; item++) {
+        const itemAmount = items[item].querySelector('.expense-amount')
+
+        let value = itemAmount.textContent.replace(onlyNumbersRegex,"")/100
+
+        totalAmount = totalAmount + value        
+    }
+    totalAmount = formatCurrencyBRL(totalAmount).replace("R$","")
+    expenseTotalAmount.innerHTML = `<small>R$</small>${totalAmount}`
+}
+
+function expenseDelete(id) {
+
 }
