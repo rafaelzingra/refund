@@ -104,6 +104,11 @@ function updateTotals(){
     expenseTotalAmount.innerHTML = `<small>R$</small>${totalAmount}`
 }
 
-function expenseDelete(id) {
+expenseList.addEventListener("click", function(e) {
+    if(e.target.classList.contains("remove-icon")) {
 
-}
+        e.target.closest(".expense").remove()
+        updateTotals()
+        
+    }
+})
